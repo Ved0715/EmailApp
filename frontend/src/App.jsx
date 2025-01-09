@@ -7,6 +7,8 @@ import Sidebar from './components/Sidebar'
 import Body from './components/Body'
 import Mail from './components/Mail'
 import SendEmail from './components/SendEmail'
+import Login from './components/Login'
+import Signup from './components/Signup'
 
 const appRouter = createBrowserRouter([
   {
@@ -22,6 +24,14 @@ const appRouter = createBrowserRouter([
         element: <Mail/>
       }
     ]
+  },
+  {
+    path:'/login',
+    element:<Login/>
+  },
+  {
+    path:"/signup",
+    element:<Signup/>
   }
 ])
 
