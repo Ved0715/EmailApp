@@ -1,19 +1,20 @@
 import mongoose from "mongoose";
 
-const emailSchema = new mongoose.SchemaTypes({
+const emailSchema = new mongoose.Schema({
     to:{
         type:String,
-        require:true,
+        required:true,
     },
     subject:{
         type:String,
-        require:true,
+        required:true,
     },
     message:{
         type:String,
-        require:true,
+        required:true,
     },
 
-},{timestamps});
+},{ timestamps: true });
 
-export const Email = mongoose.model("Email" , emailSchema);
+const Email = mongoose.model("Email" , emailSchema);
+export default Emial ;
