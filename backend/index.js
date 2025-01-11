@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 
 import userRoutes from "./routes/user.route.js";
+import emailRoutes from "./routes/email.route.js"
 
 dotenv.config({});
 connectDB();
@@ -32,6 +33,8 @@ app.use(cors(corsOptions));
 
 //routes
 app.use("/api/v1/user", userRoutes)
+app.use("/api/v1/email", emailRoutes)
+
 
 // app.use((err, req, res, next) => {
 //     console.error(err.stack);

@@ -76,3 +76,19 @@ export const login  = async(req , res , next) => {
 
     }
 }
+
+
+
+export const logout = async(req , res ) => {
+    try {
+        return res.status(200).cookie('tocken' , "", {maxAge:0}).json({
+            message:"Logged Out Successfully"
+        })
+    } catch (error) {
+        console.error(error)
+        return res.status(500).json({
+            message: "Internal server error. Something Went Wrong !!",
+            success: false,
+        });
+    }
+}

@@ -13,8 +13,12 @@ const emailSchema = new mongoose.Schema({
         type:String,
         required:true,
     },
+    userId:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'User'
+    }
 
 },{ timestamps: true });
 
 const Email = mongoose.model("Email" , emailSchema);
-export default Emial ;
+export default Email ;

@@ -22,3 +22,5 @@ const isAuthenticated = async (req , res , next) => {
         console.error(error)
     }
 }
+
+export default isAuthenticated;
