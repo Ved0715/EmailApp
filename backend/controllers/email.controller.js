@@ -43,7 +43,7 @@ export const deleteEmail = async( req , res , next) => {
             message:"Email id is reequired"
         });
 
-        const email = await Emial.findOneAndDelete(emailId);
+        const email = await Emial.findByIdAndDelete(emailId);
         if (!email) return res.status(404).json({
             message: "Email not found"
         })

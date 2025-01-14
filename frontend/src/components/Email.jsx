@@ -2,12 +2,16 @@ import React from 'react'
 
 import { MdCropSquare } from 'react-icons/md'
 import { RiStarLine } from "react-icons/ri";
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { setSelectedEmail } from '../redux/appSlice';
 
-const Email = () => {
+const Email = ({email}) => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const openMail = () => {
-        navigate("/mail/123")
+        dispatch(setSelectedEmail(email));
+        navigate(`/mail/${email._id}`);
     }
   return (
     <div onClick={openMail} className='flex items-center justify-between border-b border-gray-200 px-3 py-3 text-sm hover:cursor-pointer hover:shadow-md'>
@@ -19,11 +23,11 @@ const Email = () => {
                 <RiStarLine size={'20px'} />
             </div>
             <div>
-                <h1 className='font-semibold'>Vedant</h1>
+                <h1 className='font-semibold'>{email?.subject}</h1>
             </div>
         </div>
         <div className='flex-1 ml-4'>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis facilis molestiae ex mollitia vero, ipsa unde. Omnis odit, vero veniam deleniti natus repudiandae beatae similique voluptatum ipsa repellendus. Omnis, similique.</p>
+            <p>{email?.message}</p>
         </div>
         <div className='flex-none text-gray text-sm'>
             <p>12 days ago</p>

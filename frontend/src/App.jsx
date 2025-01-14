@@ -1,4 +1,5 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast';
 import './App.css'
 
 import Inbox from './components/Inbox' 
@@ -37,6 +38,8 @@ const appRouter = createBrowserRouter([
 
 function App() {
 
+  
+
   return (
     <div className='bg-[#F6F8FC] h-screen'>
       <Navbar/>
@@ -44,6 +47,7 @@ function App() {
       <div className='absolute w-[30%] bottom-0 right-20 z-10'>
         <SendEmail />
       </div>
+      <Toaster />
     </div>
   )
 }
