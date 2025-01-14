@@ -30,7 +30,7 @@ const Email = ({email}) => {
             <p>{email?.message}</p>
         </div>
         <div className='flex-none text-gray text-sm'>
-            <p>12 days ago</p>
+            <p>{email?.createdAt}</p>
         </div>
     </div>
   )

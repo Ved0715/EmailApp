@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { RouterProvider, createBrowserRouter, useNavigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast';
 import './App.css'
 
@@ -10,6 +10,9 @@ import Mail from './components/Mail'
 import SendEmail from './components/SendEmail'
 import Login from './components/Login'
 import Signup from './components/Signup'
+import { useEffect } from 'react';
+import store from './redux/store';
+import { useSelector } from 'react-redux';
 
 const appRouter = createBrowserRouter([
   {
@@ -38,11 +41,8 @@ const appRouter = createBrowserRouter([
 
 function App() {
 
-  
-
   return (
     <div className='bg-[#F6F8FC] h-screen'>
-      <Navbar/>
       <RouterProvider router={appRouter} />
       <div className='absolute w-[30%] bottom-0 right-20 z-10'>
         <SendEmail />
