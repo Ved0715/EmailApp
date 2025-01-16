@@ -8,6 +8,7 @@ const userSchema = new mongoose.Schema({
     email:{
         type:String,
         required:true,
+        unique: true,
     },
     password:{
         type:String,
@@ -15,8 +16,17 @@ const userSchema = new mongoose.Schema({
     },
     profilePhoto:{
         type: String,
-        required: true,
-    }
+    },
+    // verificationCode: {
+    //     type: String,
+    // },
+    // verificationCodeExpires: {
+    //     type: Date,
+    // },
+    // isVerified: {
+    //     type: Boolean,
+    //     default: false,
+    // }
 
 }, { timestamps: true });
 

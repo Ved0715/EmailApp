@@ -13,6 +13,7 @@ import Signup from './components/Signup'
 import { useEffect } from 'react';
 import store from './redux/store';
 import { useSelector } from 'react-redux';
+import PageNotFound from './components/PageNotFound';
 
 const appRouter = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const appRouter = createBrowserRouter([
   {
     path:"/signup",
     element:<Signup/>
+  },
+  {
+    path:"*",
+    element:<PageNotFound />
   }
 ])
 

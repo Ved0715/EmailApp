@@ -24,7 +24,7 @@ const SendEmail = () => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("http://localhost:8080/api/v1/email/create" , formData , {
+      const res = await axios.post("http://localhost:8080/api/v1/email/send-message" , formData , {
         headers:{
           'Content-Type':'application/json'
         },
@@ -32,12 +32,11 @@ const SendEmail = () => {
       
       });
       dispatch(setEmails([...emails , res.data.email]))
+      toast.success(res.data.message);
     } catch (error) {
       console.log(error)
       toast.error(error.response.data.message)    
     }
-
-
     dispatch(setOpen(false))
   }
 

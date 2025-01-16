@@ -4,55 +4,47 @@ import axios from 'axios'
 import toast from 'react-hot-toast';
 
 const Signup = () => {
-  const [input , setInput] =useState({
-    fullname:"",
-    email:"",
-    password:""
+  const [input, setInput] = useState({
+    fullname: "",
+    email: "",
+    password: ""
   });
 
   const navigate = useNavigate();
 
   const changeHandler = (e) => {
-    setInput({...input , [e.target.name]:e.target.value});
-  }
-
-  const submithandler =(e) => {
-    e.preventDefault();
-    console.log(input)
+    setInput({ ...input, [e.target.name]: e.target.value });
   }
 
   const submitHandler = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:8080/api/v1/user/register" , input , {
-        headers:{
-          'Content-Type':"application/json"
+      const res = await axios.post("http://localhost:8080/api/v1/user/register", input, {
+        headers: {
+          'Content-Type': "application/json"
         },
-        withCredentials:true
+        withCredentials: true
       });
-      if (res.data.success){
+      if (res.data.success) {
+        toast.success(res.data.message);
         navigate("/login");
-        toast.success(res.data.message)
       }
     } catch (error) {
-        console.error(error)
-        toast.error(error.response.data.message)    
+      console.error(error);
+      toast.error(error.response.data.message);
     }
   }
 
-
-
-
   return (
-    <div className='flex items-center justify-center w-screen pt-20'>
-        <form onSubmit={submitHandler} className='flex flex-col gap-3 bg-white p-4 w-[20%]'>
-            <h1 className='font-bold text-2xl uppercase'>SignUp</h1>
-            <input onChange={changeHandler} value={input.fullname} name='fullname' className='border border-gray-400 rounded-md px-2 py-1' type="text" placeholder='Name' />
-            <input onChange={changeHandler} value={input.email} name='email' className='border border-gray-400 rounded-md px-2 py-1' type='text' placeholder='Email' />
-            <input onChange={changeHandler} value={input.password} name='password' className='border border-gray-400 rounded-md px-2 py-1' type="password" placeholder='Password' />
-            <button type='submit' className='bg-gray-800 p-2 text-white my-2 rounded-md'>SignUp</button>
-            <p>Already Have an account? <Link to={'/login'} className='text-blue-600'>Login</Link></p>
-        </form>
+    <div className='relative flex items-center justify-center w-screen h-screen'>
+      <form onSubmit={submitHandler} className={`relative flex flex-col gap-4 bg-white p-8 rounded-lg shadow-lg w-[90%] max-w-md animate-fade-in`}>
+        <h1 className='font-bold text-3xl text-center text-gray-800 mb-4'>Sign Up for GamilApp</h1>
+        <input onChange={changeHandler} value={input.fullname} name='fullname' className='border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' type="text" placeholder='Name' />
+        <input onChange={changeHandler} value={input.email} name='email' className='border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' type='email' placeholder='Email' />
+        <input onChange={changeHandler} value={input.password} name='password' className='border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' type="password" placeholder='Password' />
+        <button type='submit' className='bg-blue-600 p-2 text-white rounded-md hover:bg-blue-700 transition duration-300'>Sign Up</button>
+        <p className='text-center text-gray-600'>Already have an account? <Link to={'/login'} className='text-blue-600 hover:underline'>Login</Link></p>
+      </form>
     </div>
   )
 }
