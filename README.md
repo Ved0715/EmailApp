@@ -27,7 +27,7 @@ A modern email app for sending, receiving, and managing emails. Features include
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/GamilApp.git
+    git clone https://github.com/Ved0715/EmailApp.git
     ```
 
 2. Navigate to the project directory:
@@ -46,9 +46,9 @@ A modern email app for sending, receiving, and managing emails. Features include
 4. Set up environment variables:
     - Create a `.env` file in the `backend` directory and add the following:
         ```
-        SECRET_KEY=your_secret_key
-        EMAIL=your_email@gmail.com
-        PASSWORD=your_email_password
+        MONGO_URI = something...
+        SECRET_KEY = somthing...
+
         ```
 
 5. Start the backend server:
@@ -60,7 +60,7 @@ A modern email app for sending, receiving, and managing emails. Features include
 6. Start the frontend server:
     ```bash
     cd frontend
-    npm start
+    npm ren dev
     ```
 
 ## Note
