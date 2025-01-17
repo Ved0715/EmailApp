@@ -17,16 +17,26 @@ const userSchema = new mongoose.Schema({
     profilePhoto:{
         type: String,
     },
+    google_id:{
+        type: String,
+    },
+    auth_provider:{
+        type: String,
+        required: true,
+        default: "local",
+    },
+    isVerified:{
+        type: Boolean,
+        required: true,
+        default: false,
+    },
     // verificationCode: {
     //     type: String,
     // },
     // verificationCodeExpires: {
     //     type: Date,
     // },
-    // isVerified: {
-    //     type: Boolean,
-    //     default: false,
-    // }
+ 
 
 }, { timestamps: true });
 

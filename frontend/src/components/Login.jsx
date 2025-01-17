@@ -2,15 +2,17 @@ import axios from 'axios';
 import React, { useState } from 'react'
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, redirect, useNavigate } from 'react-router-dom'
 import { setAuthUser } from '../redux/appSlice';
+import { useGoogleLogin } from '@react-oauth/google';
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 const Login = () => {
   const [input, setInput] = useState({
     email: "",
     password: ""
   });
-
+  const [showPassword, setShowPassword] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   const navigate = useNavigate();
@@ -35,7 +37,7 @@ const Login = () => {
         toast.success(res.data.message);
         setTimeout(() => {
           navigate("/");
-        }, 2000); // Delay navigation to show animation
+        }, 2000); 
       }
     } catch (error) {
       console.error(error);
@@ -43,17 +45,69 @@ const Login = () => {
     }
   }
 
+  const responseGoogle = async (authResult) => {
+    try {
+      if (authResult?.code) {
+        const res = await axios.get(`http://localhost:8080/api/v1/user/google-login?code=${authResult.code}`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true, 
+        });
+        toast.success(res.data.message);
+        if (res.data.success) {
+          if (!res.data.newUser) {
+          dispatch(setAuthUser(res.data.user));
+          }
+        }
+        navigate(res.data.redirectUrl, {
+          state: { token: res.data.token },
+        });
+        
+
+      } else {
+        console.error("Google login error:", authResult);
+        toast.error("Google login error:", authResult);
+      }
+    } catch (error) {
+      console.error("Error during Google login process:", error.response?.data || error.message);
+      toast.error(error.response?.data?.message || "Something went wrong");
+    }
+  }
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: responseGoogle,
+    onError: responseGoogle,
+    flow: 'auth-code',
+    
+  });
+
   return (
     <div className='relative flex items-center justify-center w-screen h-screen'>
-      <form onSubmit={submitHandler} className={`relative flex flex-col gap-4 bg-white p-8 rounded-lg shadow-lg w-[90%] max-w-md animate-fade-in ${isSuccess ? 'animate-success' : ''}`}>
+      <div className='relative flex flex-col gap-4 bg-white p-8 rounded-lg shadow-lg w-[90%] max-w-md animate-fade-in'>
         <h1 className='font-bold text-3xl text-center text-gray-800 mb-4'>Login to GamilApp</h1>
-        <input onChange={changeHandler} value={input.email} name='email' className='border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' type="email" placeholder='Email' />
-        <input onChange={changeHandler} value={input.password} name='password' className='border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' type="password" placeholder='Password' />
-        <button type='submit' className='bg-blue-600 p-2 text-white rounded-md hover:bg-blue-700 transition duration-300'>Login</button>
+        <form onSubmit={submitHandler} className={`flex flex-col gap-4`}>
+          <input onChange={changeHandler} value={input.email} name='email' className='border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' type="email" placeholder='Email' />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              id="password"
+              placeholder='Password'
+              value={input.password}
+              onChange={changeHandler}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+              required
+            />
+            <div className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer" onClick={() => setShowPassword(!showPassword)}>
+              {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+            </div>
+          </div>
+          <button type='submit' className='bg-blue-600 p-2 text-white rounded-md hover:bg-blue-700 transition duration-300'>Login</button>
+        </form>
         <p className='text-center text-gray-600'>Don't have an account? <Link to={'/signup'} className='text-blue-600 hover:underline'>Signup</Link></p>
         <p className='text-center text-gray-600'>Forgot Password? <Link to={'/forgot-password'} className='text-blue-600 hover:underline'>Reset Password</Link></p>
-
-        <button className="flex items-center justify-center bg-white border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+        <button onClick={googleLogin} className="flex items-center justify-center bg-white border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
           <svg className="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="800px" height="800px" viewBox="-0.5 0 48 48" version="1.1">
             <title>Google-color</title>
             <desc>Created with Sketch.</desc>
@@ -71,8 +125,7 @@ const Login = () => {
           </svg>
           <span>Continue with Google</span>
         </button>
-        
-      </form>
+      </div>
     </div>
   )
 }

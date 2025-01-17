@@ -14,6 +14,18 @@ import { useEffect } from 'react';
 import store from './redux/store';
 import { useSelector } from 'react-redux';
 import PageNotFound from './components/PageNotFound';
+import {GoogleOAuthProvider} from '@react-oauth/google'
+import SetPassword from './components/SetPassword';
+
+const GoogleoAuthWrapper = () => {
+  return (
+    <GoogleOAuthProvider clientId='978414188823-15b809q9j6ihmqjrj4thc4me7298kb41.apps.googleusercontent.com'>
+      <Login ></Login>
+    </GoogleOAuthProvider>
+  )
+}
+
+
 
 const appRouter = createBrowserRouter([
   {
@@ -32,11 +44,15 @@ const appRouter = createBrowserRouter([
   },
   {
     path:'/login',
-    element:<Login/>
+    element:<GoogleoAuthWrapper/>
   },
   {
     path:"/signup",
     element:<Signup/>
+  },
+  {
+    path:'/set-password',
+    element:<SetPassword />
   },
   {
     path:"*",
