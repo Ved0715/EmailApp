@@ -1,9 +1,18 @@
-module.exports = {
-  host: 'smtp.example.com', // Replace with your SMTP host
-  port: 587, // Replace with your SMTP port
-  secure: false, // true for 465, false for other ports
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+
+// Load environment variables
+dotenv.config();
+
+export const transporter = nodemailer.createTransport({
+  host: 'smtp.gmail.com',
+  port: 465,
   auth: {
-    user: 'your-email@example.com', // Replace with your SMTP username
-    pass: 'your-email-password' // Replace with your SMTP password
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_APP_PASSWORD,
+  },
+  secure: true, // true for port 465, false for port 587
+  tls: {
+    rejectUnauthorized: true
   }
-};
+});

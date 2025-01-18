@@ -85,7 +85,7 @@ const Login = () => {
   return (
     <div className='relative flex items-center justify-center w-screen h-screen'>
       <div className='relative flex flex-col gap-4 bg-white p-8 rounded-lg shadow-lg w-[90%] max-w-md animate-fade-in'>
-        <h1 className='font-bold text-3xl text-center text-gray-800 mb-4'>Login to GamilApp</h1>
+        <h1 className='font-bold text-3xl text-center text-gray-800 mb-4'>Login</h1>
         <form onSubmit={submitHandler} className={`flex flex-col gap-4`}>
           <input onChange={changeHandler} value={input.email} name='email' className='border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500' type="email" placeholder='Email' />
           <div className="relative">

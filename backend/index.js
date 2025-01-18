@@ -3,23 +3,22 @@ import dotenv from 'dotenv';
 import connectDB from './db/connectDb.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-
-
- 
 import path from 'path' ;
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import mongoSanitize from 'express-mongo-sanitize';
-
 import userRoutes from "./routes/user.routes.js";
 import emailRoutes from "./routes/email.routes.js";
+import verifyRouter from "./routes/verifyEmail.routes.js";
+
+// Load environment variables
+dotenv.config({});
 
 const app = express() ;
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 
 app.use(helmet());
 
-dotenv.config({});
 connectDB();
 
 // Rate limiting
@@ -56,6 +55,8 @@ app.use(cors(corsOptions));
 //routes
 app.use("/api/v1/user", userRoutes)
 app.use("/api/v1/email", emailRoutes)
+app.use("/api/v1/verify-email", verifyRouter)
+
 
 
 
