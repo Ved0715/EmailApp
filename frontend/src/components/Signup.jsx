@@ -10,19 +10,34 @@ const Signup = () => {
     email: "",
     verificationCode: "",
     password: "",
+    username: "",
+    confirmPassword: ""
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [verificationToken, setVerificationToken] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState(true);
 
   const navigate = useNavigate();
 
   const changeHandler = (e) => {
-    setInput({ ...input, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setInput({ ...input, [name]: value });
+
+    
+
+    if (name === "email") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      setIsEmailValid(emailRegex.test(value));
+    }
   };
 
   const submitHandler = async (e) => {
     e.preventDefault();
+    if (!isEmailValid) {
+      toast.error("Email format is invalid");
+      return;
+    }
     try {
       const res = await axios.post(
         "http://localhost:8080/api/v1/verify-email/send-verification-code",
@@ -69,10 +84,14 @@ const Signup = () => {
 
   const registerHandler = async (e) => {
     e.preventDefault();
+    if (input.password !== input.confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
     try {
       const res = await axios.post(
         "http://localhost:8080/api/v1/user/register",
-        input,
+        { fullname: input.fullname, email: input.email, password: input.password },
         {
           headers: {
             "Content-Type": "application/json",
@@ -109,22 +128,27 @@ const Signup = () => {
           required
         />
         <div className="relative">
-              <input
-                name="email"
-                type="email"
-                placeholder="Email"
-                value={input.email}
-                onChange={changeHandler}
-                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 "
-                required
-                disabled={isEmailVerified}
-              />
-              {isEmailVerified && (
-              <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-                <AiFillLock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
-              </div>
-              )}
+          <input
+            onChange={changeHandler}
+            value={input.email}
+            name="email"
+            className={`block w-full border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 ${isEmailValid ? 'focus:ring-blue-500' : 'focus:ring-red-500'}`}
+            type="email"
+            placeholder="Email"
+            required
+            disabled={isEmailVerified}
+          />
+          {isEmailVerified && (
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
+            <AiFillLock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+          </div>
+          )}
         </div>
+        {!isEmailValid && (
+        <p className={`text-sm text-red-500`}>
+          Please enter a valid email address
+        </p>
+        )}
         {verificationToken && !isEmailVerified && (
           <>
             <input
@@ -163,10 +187,25 @@ const Signup = () => {
                 {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
               </div>
             </div>
-            <button
-              type="submit"
-              className="bg-blue-600 p-2 text-white rounded-md hover:bg-blue-700 transition duration-300"
-            >
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="confirmPassword"
+                id="confirmPassword"
+                placeholder="Confirm Password"
+                value={input.confirmPassword}
+                onChange={changeHandler}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                required
+              />
+              <div
+                className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+              </div>
+            </div>
+            <button type="submit" className="bg-blue-600 p-2 text-white rounded-md hover:bg-blue-700 transition duration-300">
               Register
             </button>
           </>

@@ -8,6 +8,7 @@ import { setAuthUser } from '../redux/appSlice';
 
 const SetPassword = () => {
   const [formData, setFormData] = useState({
+    username: '',
     password: '',
     confirmPassword: ''
   });
@@ -37,7 +38,6 @@ const SetPassword = () => {
         withCredentials: true
       });
 
-      toast.success(res.data.message);
       if (res.data.success) {
         dispatch(setAuthUser(res.data.user));
         toast.success(res.data.message);
@@ -56,6 +56,21 @@ const SetPassword = () => {
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold mb-4">Set Password</h2>
         <form onSubmit={submitHandler} className="space-y-4">
+          {/* <div className="relative">
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
+            <div className="relative">
+              <input
+                type="text"
+                name="username"
+                id="username"
+                placeholder='Username'
+                value={formData.username}
+                onChange={changeHandler}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                required
+              />
+            </div>
+          </div> */}
           <div className="relative">
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
             <div className="relative">

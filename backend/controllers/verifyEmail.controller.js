@@ -74,7 +74,6 @@ export const sendVerificationCode = async (req, res, next) => {
 export const verifyEmail = async (req, res, next) => {
     try {
         const { email, verificationCode , token } = req.body;
-        console.log(email, verificationCode, token);
         if (!email){
             return res.status(400).json({
                 message: "Email is required",
@@ -112,7 +111,7 @@ export const verifyEmail = async (req, res, next) => {
         return res.status(200).json({
             message: "Email verified successfully",
             success: true,
-            redirectUrl: 'somewere',
+            emailVerified: true,
         })
     
     } catch (error) {

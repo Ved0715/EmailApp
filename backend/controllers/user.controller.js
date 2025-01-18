@@ -4,54 +4,77 @@ import { oauth2Client } from "../utils/googleConfig.js";
 import jwt from "jsonwebtoken";
 import axios from "axios";
 
-
 // Email validation function
 const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(String(email).toLowerCase());
 };
 
+// Function to generate a random 4-digit number
+const generateRandomNumber = () => {
+    return Math.floor(1000 + Math.random() * 9000);
+};
+
+// Function to generate a unique username
+const generateUniqueUsername = async (fullname) => {
+    const firstname = fullname.split(' ')[0];
+    let username;
+    let isUnique = false;
+
+    while (!isUnique) {
+        const randomNumber = generateRandomNumber();
+        username = `${firstname}@${randomNumber}`;
+        const existingUser = await User.findOne({ username });
+        if (!existingUser) {
+            isUnique = true;
+        }
+    }
+
+    return username;
+};
+
 export const register = async (req, res, next) => {
-    // try {
-    //     const { fullname, email, password } = req.body;
-    //     if (!fullname || !email || !password) return res.status(400).json({
-    //         message: "All fields are required",
-    //         success: false,
-    //     });
+    try {
+        const { fullname, email, password } = req.body;
+        if (!fullname || !email || !password) return res.status(400).json({
+            message: "All fields are required",
+            success: false,
+        });
 
-    //     if (!validateEmail(email)) return res.status(400).json({
-    //         message: "Invalid email format",
-    //         success: false,
-    //     });
+        if (!validateEmail(email)) return res.status(400).json({
+            message: "Invalid email format",
+            success: false,
+        });
 
-    //     const user = await User.findOne({ email });
-    //     if (user) return res.status(400).json({
-    //         message: "User already exists",
-    //         success: false,
-    //     });
+        const user = await User.findOne({ email });
+        if (user) return res.status(400).json({
+            message: "User already exists",
+            success: false,
+        });
 
-    //     const hashedPassword = await bcrypt.hash(password, 10);
-    //     const profilePhoto = `https://avatar.iran.liara.run/public/boy`;
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const profilePhoto = `https://avatar.iran.liara.run/public/boy`;
+        const username = await generateUniqueUsername(fullname);
 
-    //     await User.create({
-    //         fullname,
-    //         email,
-    //         password: hashedPassword,
-    //         profilePhoto: profilePhoto,
-    //         isVerified: true
-    //     });
-
-    //     return res.status(200).json({
-    //         message: "Account created successfully.",
-    //         success: true,
-    //     });
-    // } catch (error) {
-    //     console.error(error);
-    //     return res.status(500).json({
-    //         message: "Internal server error.",
-    //         success: false,
-    //     });
-    // }
+       await User.create({
+            username: username,
+            fullname,
+            email,
+            password: hashedPassword,
+            profilePhoto: profilePhoto,
+            isVerified: true
+        });
+        return res.status(200).json({
+            message: "Account created successfully.",
+            success: true,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: "Internal server error.",
+            success: false,
+        });
+    }
 };
 
 export const login = async (req, res, next) => {
@@ -203,7 +226,11 @@ export const setPassword = async (req, res, next) => {
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
+        // Generate a unique username
+        const username = await generateUniqueUsername(name);
+
         const user = await User.create({
+            username: username,
             fullname: name,
             email,
             password: hashedPassword,
