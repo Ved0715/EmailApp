@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    userID:{
+    username:{
         type:String,
         required:true,
         unique: true,
@@ -25,6 +25,11 @@ const userSchema = new mongoose.Schema({
     google_id:{
         type: String,
     },
+    last_login_date:{
+        type: Date,
+        required: true,
+        default: Date.now,
+    },
     auth_provider:{
         type: String,
         required: true,
@@ -35,12 +40,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         default: false,
     },
-    // verificationCode: {
-    //     type: String,
-    // },
-    // verificationCodeExpires: {
-    //     type: Date,
-    // },
+
  
 
 }, { timestamps: true });

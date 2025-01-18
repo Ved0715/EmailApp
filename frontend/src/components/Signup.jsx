@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { AiFillLock, AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 const Signup = () => {
   const [input, setInput] = useState({
     fullname: "",
     email: "",
     verificationCode: "",
+    password: "",
   });
-  // const [verificationCode, setVerificationCode] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
   const [verificationToken, setVerificationToken] = useState("");
@@ -40,7 +40,7 @@ const Signup = () => {
       }
     } catch (error) {
       console.error(error);
-      toast.error(error.message);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -49,7 +49,7 @@ const Signup = () => {
     try {
       const res = await axios.post(
         "http://localhost:8080/api/v1/verify-email/verify-verification-code",
-        { email: input.email, verificationCode:input.verificationCode, token: verificationToken },
+        { email: input.email, verificationCode: input.verificationCode, token: verificationToken },
         {
           headers: {
             "Content-Type": "application/json",
@@ -106,15 +106,25 @@ const Signup = () => {
           className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           type="text"
           placeholder="Name"
+          required
         />
-        <input
-          onChange={changeHandler}
-          value={input.email}
-          name="email"
-          className="border border-gray-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          type="email"
-          placeholder="Email"
-        />
+        <div className="relative">
+              <input
+                name="email"
+                type="email"
+                placeholder="Email"
+                value={input.email}
+                onChange={changeHandler}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 "
+                required
+                disabled={isEmailVerified}
+              />
+              {isEmailVerified && (
+              <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+                <AiFillLock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+              </div>
+              )}
+        </div>
         {verificationToken && !isEmailVerified && (
           <>
             <input
@@ -143,7 +153,7 @@ const Signup = () => {
                 placeholder="Password"
                 value={input.password}
                 onChange={changeHandler}
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 required
               />
               <div
